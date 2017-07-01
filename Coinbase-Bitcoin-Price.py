@@ -132,7 +132,6 @@ def check_bitcoin_price(intent, session):
 # ============ Events =============
 
 def session_started(session_started_request, session):
-
     print('on_sesion_started requestId=' + session_started_request['requestId'] + ', sessionId=' + session['sessionId'])
 
 
