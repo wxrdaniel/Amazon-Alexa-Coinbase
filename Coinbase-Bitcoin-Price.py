@@ -51,23 +51,39 @@
 from __future__ import print_function
 import urllib, json
 
-spot_price_url = 'https://api.coinbase.com/v2/prices/BTC-USD/spot'
-buy_price_url = 'https://api.coinbase.com/v2/prices/BTC-USD/buy'
-sell_price_url = 'https://api.coinbase.com/v2/prices/BTC-USD/sell'
+# ========================== Bitcoin ==================================
+bitcoin_spot_price_url = 'https://api.coinbase.com/v2/prices/BTC-USD/spot'
+bitcoin_buy_price_url = 'https://api.coinbase.com/v2/prices/BTC-USD/buy'
+bitcoin_sell_price_url = 'https://api.coinbase.com/v2/prices/BTC-USD/sell'
 
-spot_response = urllib.urlopen(spot_price_url)
-spot_data = json.loads(spot_response.read())
-spot_price = spot_data[u'data'][u'amount']
+bitcoin_spot_response = urllib.urlopen(bitcoin_spot_price_url)
+bitcoin_spot_data = json.loads(bitcoin_spot_response.read())
+bitcoin_spot_price = bitcoin_spot_data[u'data'][u'amount']
 
-buy_response = urllib.urlopen(buy_price_url)
-buy_data = json.loads(buy_response.read())
-buy_price = buy_data[u'data'][u'amount']
+bitcoin_buy_response = urllib.urlopen(bitcoin_buy_price_url)
+bitcoin_buy_data = json.loads(bitcoin_buy_response.read())
+bitcoin_buy_price = bitcoin_buy_data[u'data'][u'amount']
 
-sell_response = urllib.urlopen(sell_price_url)
-sell_data = json.loads(sell_response.read())
-sell_price = sell_data[u'data'][u'amount']
+bitcoin_sell_response = urllib.urlopen(bitcoin_sell_price_url)
+bitcoin_sell_data = json.loads(bitcoin_sell_response.read())
+bitcoin_sell_price = bitcoin_sell_data[u'data'][u'amount']
 
+# ======================= Ethereum =============================
+ethereum_spot_price_url = 'https://api.coinbase.com/v2/prices/ETH-USD/spot'
+ethereum_buy_price_url = 'https://api.coinbase.com/v2/prices/ETH-USD/buy'
+ethereum_sell_price_url = 'https://api.coinbase.com/v2/prices/ETH-USD/sell'
 
+ethereum_spot_response = urllib.urlopen(ethereum_spot_price_url)
+ethereum_spot_data = json.loads(ethereum_spot_response.read())
+ethereum_spot_price = ethereum_spot_data[u'data'][u'amount']
+
+ethereum_buy_response = urllib.urlopen(ethereum_buy_price_url)
+ethereum_buy_data = json.loads(ethereum_buy_response.read())
+ethereum_buy_price = ethereum_buy_data[u'data'][u'amount']
+
+ethereum_sell_response = urllib.urlopen(ethereum_sell_price_url)
+ethereum_sell_data = json.loads(ethereum_sell_response.read())
+ethereum_sell_price = ethereum_sell_data[u'data'][u'amount']
 # Build Alexa Skill Kit Response Functions
 def build_speechlet_response(title, output, reprompt_text, should_end_session):
     return {
@@ -122,13 +138,25 @@ def check_bitcoin_price(intent, session):
     should_end_session = True
 
     # ============== Speech Out Price =================
-    speech_output = "The bitcoin price right now is " + spot_price + " dollars. " \
-                    "You can buy bitcoin now with " + buy_price + " dollars. " \
-                    "Or you could sell your bitcoin with " + sell_price + " dollars. "
+    speech_output = "The bitcoin price right now is " + bitcoin_spot_price + " dollars. " \
+                    "You can buy bitcoin now with " + bitcoin_buy_price + " dollars. " \
+                    "Or you could sell your bitcoin with " + bitcoin_sell_price + " dollars. "
 
     return build_response(session_attributes, build_speechlet_response(card_title, speech_output, None, should_end_session))
 
 
+def check_ethereum_price(intent, session):
+    # ================ General JSON Values ==================
+    card_title = intent['name']
+    session_attributes = {}
+    should_end_session = True
+
+    # ================ Speech Out Price ===================
+    speech_output = "The Ethereum price right now is " + ethereum_spot_price + " dollars. " \
+                    "You can buy Ethereum now with " + ethereum_buy_price + " dollars. " \
+                    "Or you could sell your Ethereum with " + ethereum_sell_price + " dollars. "
+
+    return build_response(session_attributes, build_speechlet_response(card_title, speech_output, None, should_end_session))
 # ============ Events =============
 
 def session_started(session_started_request, session):
@@ -145,6 +173,8 @@ def on_intent(intent_request, session):
 
     if intent_name == "GetBitcoinPrice":
         return check_bitcoin_price(intent, session)
+    elif intent_name == "GetEthereumPrice":
+        return check_ethereum_price(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
