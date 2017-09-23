@@ -1,2 +1,2 @@
-# Amazon-Alexa-Skills
-Coinbase Pricing on Amazon Alexa
+# Coinbase Pricing
+Make Alexa pulling pricing information from Coinbase market.
